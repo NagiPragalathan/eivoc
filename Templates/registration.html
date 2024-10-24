@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system"> <!-- DaisyUI will follow system theme -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EIVOC 2025 Registration</title>
+    <!-- Tailwind CSS with DaisyUI integration -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.css" rel="stylesheet">
+    <!-- Adding a few custom styles for improved look -->
+    <style>
+        body {
+            min-height: 100vh;
+            background: var(--b1); /* Background based on theme */
+        }
+        .input-group-icon {
+            display: flex;
+            align-items: center;
+        }
+        .input-group-icon .input {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body class="p-8">
+    <h1 class="text-4xl font-bold text-center mb-8 text-primary">EIVOC 2025 Registration</h1>
+
+    <form method="post" enctype="multipart/form-data" class="max-w-2xl mx-auto bg-base-100 p-6 shadow-md rounded-lg">
+        {% csrf_token %}
+
+        <!-- Prefix -->
+        <div class="form-control mb-4">
+            <label for="prefix" class="label">
+                <span class="label-text text-lg font-medium">Prefix:</span>
+            </label>
+            <select name="prefix" id="prefix" class="select select-bordered w-full" required>
+                <option value="Mr">Mr</option>
+                <option value="Ms">Ms</option>
+                <option value="Dr">Dr</option>
+                <option value="Prof">Prof</option>
+            </select>
+        </div>
+
+        <!-- Name -->
+        <div class="flex flex-col sm:flex-row sm:space-x-4 mb-4">
+            <div class="form-control mb-4 sm:mb-0">
+                <label for="first_name" class="label">
+                    <span class="label-text text-lg font-medium">First Name:</span>
+                </label>
+                <input type="text" id="first_name" name="first_name" class="input input-bordered w-full" required>
+            </div>
+
+            <div class="form-control">
+                <label for="surname" class="label">
+                    <span class="label-text text-lg font-medium">Surname:</span>
+                </label>
+                <input type="text" id="surname" name="surname" class="input input-bordered w-full" required>
+            </div>
+        </div>
+
+        <!-- Gender -->
+        <div class="form-control mb-4">
+            <label for="gender" class="label">
+                <span class="label-text text-lg font-medium">Gender:</span>
+            </label>
+            <select name="gender" id="gender" class="select select-bordered w-full" required>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <!-- Email and Date of Birth -->
+        <div class="flex flex-col sm:flex-row sm:space-x-4 mb-4">
+            <div class="form-control mb-4 sm:mb-0">
+                <label for="email" class="label">
+                    <span class="label-text text-lg font-medium">Email:</span>
+                </label>
+                <input type="email" id="email" name="email" class="input input-bordered w-full" required>
+            </div>
+
+            <div class="form-control">
+                <label for="dob" class="label">
+                    <span class="label-text text-lg font-medium">Date of Birth:</span>
+                </label>
+                <input type="date" id="dob" name="dob" class="input input-bordered w-full" required>
+            </div>
+        </div>
+
+        <!-- Institute and Designation -->
+        <div class="form-control mb-4">
+            <label for="institute" class="label">
+                <span class="label-text text-lg font-medium">Institute/Organisation:</span>
+            </label>
+            <input type="text" id="institute" name="institute" class="input input-bordered w-full" required>
+        </div>
+
+        <div class="form-control mb-4">
+            <label for="designation" class="label">
+                <span class="label-text text-lg font-medium">Designation:</span>
+            </label>
+            <input type="text" id="designation" name="designation" class="input input-bordered w-full">
+        </div>
+
+        <!-- Highest Educational Qualification -->
+        <div class="form-control mb-4">
+            <label for="education" class="label">
+                <span class="label-text text-lg font-medium">Highest Educational Qualification:</span>
+            </label>
+            <input type="text" id="education" name="education" class="input input-bordered w-full" required>
+        </div>
+
+        <!-- Category (Student or Regular) -->
+        <div class="form-control mb-4">
+            <label for="category" class="label">
+                <span class="label-text text-lg font-medium">Category:</span>
+            </label>
+            <select name="category" id="category" class="select select-bordered w-full" required>
+                <option value="Student">Student</option>
+                <option value="Regular">Regular</option>
+            </select>
+        </div>
+
+        <!-- Student Category Section (only visible if 'Student' is selected) -->
+        <div id="student_category_section" class="form-control mb-4 hidden">
+            <label for="student_category" class="label">
+                <span class="label-text text-lg font-medium">Student Category:</span>
+            </label>
+            <select name="student_category" id="student_category" class="select select-bordered w-full">
+                <option value="Undergraduate">Undergraduate</option>
+                <option value="Postgraduate">Postgraduate</option>
+            </select><br>
+
+            <label for="bona_fide" class="label">
+                <span class="label-text text-lg font-medium">Upload Bona fide:</span>
+            </label>
+            <input type="file" id="bona_fide" name="bona_fide" accept=".jpeg,.jpg,.pdf" class="file-input file-input-bordered w-full"><br>
+        </div>
+
+        <!-- Regular Category Section (only visible if 'Regular' is selected) -->
+        <div id="regular_category_section" class="form-control mb-4 hidden">
+            <label for="regular_category" class="label">
+                <span class="label-text text-lg font-medium">Regular Category:</span>
+            </label>
+            <select name="regular_category" id="regular_category" class="select select-bordered w-full">
+                <option value="Fellows">Fellows</option>
+                <option value="Doctoral Students">Doctoral Students</option>
+                <option value="Optometry Practitioners">Optometry Practitioners</option>
+                <option value="Academicians">Academicians</option>
+                <option value="Researchers">Researchers</option>
+                <option value="Ophthalmologists">Ophthalmologists</option>
+                <option value="Opticians">Opticians</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <!-- Free text field if 'Other' is selected -->
+            <div id="other_regular_category" class="mt-4 hidden">
+                <label for="other_category" class="label">
+                    <span class="label-text text-lg font-medium">Please specify:</span>
+                </label>
+                <input type="text" id="other_category" name="other_category" class="input input-bordered w-full"><br>
+            </div>
+        </div>
+
+        <!-- Address -->
+        <div class="form-control mb-4">
+            <label for="address" class="label">
+                <span class="label-text text-lg font-medium">Address for Communication:</span>
+            </label>
+            <textarea id="address" name="address" class="textarea textarea-bordered w-full" required></textarea><br>
+        </div>
+
+        <!-- State and Country -->
+        <div class="flex flex-col sm:flex-row sm:space-x-4 mb-4">
+            <div class="form-control mb-4 sm:mb-0">
+                <label for="state" class="label">
+                    <span class="label-text text-lg font-medium">State:</span>
+                </label>
+                <input type="text" id="state" name="state" class="input input-bordered w-full" required>
+            </div>
+
+            <div class="form-control">
+                <label for="country" class="label">
+                    <span class="label-text text-lg font-medium">Country:</span>
+                </label>
+                <select name="country" id="country" class="select select-bordered w-full" required>
+                    <option value="India">India</option>
+                    <option value="USA">USA</option>
+                    <option value="UK">UK</option>
+                    <!-- Add more countries as needed -->
+                </select>
+            </div>
+        </div>
+
+        <!-- Pin Code and Mobile Number -->
+        <div class="flex flex-col sm:flex-row sm:space-x-4 mb-4">
+            <div class="form-control mb-4 sm:mb-0">
+                <label for="pin_code" class="label">
+                    <span class="label-text text-lg font-medium">Pin Code:</span>
+                </label>
+                <input type="text" id="pin_code" name="pin_code" class="input input-bordered w-full" required>
+            </div>
+
+            <div class="form-control">
+                <label for="mobile" class="label">
+                    <span class="label-text text-lg font-medium">Mobile Number:</span>
+                </label>
+                <input type="text" id="mobile" name="mobile" class="input input-bordered w-full" required>
+            </div>
+        </div>
+
+        <!-- Password -->
+        <div class="flex flex-col sm:flex-row sm:space-x-4 mb-4">
+            <div class="form-control mb-4 sm:mb-0">
+                <label for="password" class="label">
+                    <span class="label-text text-lg font-medium">Create Password:</span>
+                </label>
+                <input type="password" id="password" name="password" class="input input-bordered w-full" required>
+            </div>
+
+            <div class="form-control">
+                <label for="password2" class="label">
+                    <span class="label-text text-lg font-medium">Re-enter Password:</span>
+                </label>
+                <input type="password" id="password2" name="password2" class="input input-bordered w-full" required>
+            </div>
+        </div>
+
+        <!-- Submit button -->
+        <div class="mt-6 text-center">
+            <button type="submit" class="btn btn-primary w-full">Register</button>
+        </div>
+    </form>
+
+    <!-- JavaScript for toggling sections -->
+    <script>
+        // Toggle student category section
+        document.getElementById('category').addEventListener('change', function() {
+            const studentSection = document.getElementById('student_category_section');
+            const regularSection = document.getElementById('regular_category_section');
+            if (this.value === 'Student') {
+                studentSection.classList.remove('hidden');
+                regularSection.classList.add('hidden');
+            } else {
+                studentSection.classList.add('hidden');
+                regularSection.classList.remove('hidden');
+            }
+        });
+
+        // Toggle "Other" category text field
+        document.getElementById('regular_category').addEventListener('change', function() {
+            const otherCategoryField = document.getElementById('other_regular_category');
+            if (this.value === 'Other') {
+                otherCategoryField.classList.remove('hidden');
+            } else {
+                otherCategoryField.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
