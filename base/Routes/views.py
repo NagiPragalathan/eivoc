@@ -1,9 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from .models import UserProfile, StudentCategory
+from base.models import UserProfile, StudentCategory
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
+from django.core.mail import send_mail
+from django.conf import settings
+from .utiles.utiles import generate_registration_number
+from .utiles.constants import login_mail_content
 
 def user_logout(request):
     logout(request)
@@ -24,7 +28,7 @@ def user_login(request):
             messages.error(request, 'Invalid username or password. Please try again.')
             return redirect('login')  
 
-    return render(request, 'login.html')
+    return render(request, 'auth/login.html')
 
 
 def register(request):
@@ -47,11 +51,9 @@ def register(request):
         mobile = request.POST.get('mobile')
         password = request.POST.get('password')
 
-        # Create the user
         user = User.objects.create_user(username=email, email=email, password=password)
         user.save()
 
-        # Handle student category
         student_category = None
         if category == 'Student':
             student_type = request.POST.get('student_category')
@@ -59,12 +61,10 @@ def register(request):
             student_category = StudentCategory.objects.create(category=student_type, bona_fide=bona_fide)
             student_category.save()
 
-        # Handle regular category
         regular_category = request.POST.get('regular_category')
         if regular_category == 'Other':
             regular_category = request.POST.get('other_category')
 
-        # Create user profile
         user_profile = UserProfile.objects.create(
             user=user,
             prefix=prefix,
@@ -87,8 +87,19 @@ def register(request):
         )
         user_profile.save()
 
-        # Show success message and redirect to login
-        messages.success(request, 'Registration successful! You can now log in.')
+        registration_number = generate_registration_number(user_profile) 
+
+        subject = 'EIVOC 2025 Conference Preregistration'
+        message = login_mail_content(prefix, first_name, surname, registration_number, email, password)
+        send_mail(
+            subject,
+            message,
+            settings.EMAIL_HOST_USER,
+            [email],
+            fail_silently=False,
+        )
+
+        messages.success(request, 'Registration successful! Check your email for the login details.')
         return redirect('login')
 
-    return render(request, 'registration.html')
+    return render(request, 'auth/registration.html')
